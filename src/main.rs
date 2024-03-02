@@ -8,7 +8,7 @@ use games::blackjack::Blackjack;
 
 
 fn main() {
-    let game: &mut dyn Game = &mut Blackjack::new();
+    let game = &mut Blackjack::new();
     game.play();
 
     let mut deck = Deck::new();
