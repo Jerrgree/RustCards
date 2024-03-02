@@ -2,6 +2,7 @@ use crate::games::game::Game;
 use crate::player::Player;
 use crate::card::Rank;
 use crate::deck::Deck;
+use text_io::read;
 
 pub struct Blackjack<'a> {
 	player: Player<'a>,
@@ -25,13 +26,14 @@ impl Blackjack<'_> {
 	}
 
 	fn print_dealer_hand(&self) {
-		let firstCard = &self.dealer.hand[0];
-		println!("Dealer is showing: {firstCard}");
+		let first_card = &self.dealer.hand[0];
+		println!("Dealer is showing: {first_card}");
 	}
 }
 
 impl Game for Blackjack<'_> {
 	fn play(&mut self) {
+		let mut continue_play = true;
 		println!("Blackjack! {} vs {}", self.player.name, self.dealer.name);
 
 		self.deck.shuffle();
@@ -41,12 +43,29 @@ impl Game for Blackjack<'_> {
 		self.player.hand.push(self.deck.draw().expect("Initial deal should not be empty"));
 		self.dealer.hand.push(self.deck.draw().expect("Initial deal should not be empty"));
 
-		self.print_player_hand();
-		self.print_dealer_hand();
+		while self.player.score() < 22 && continue_play == true {
+			self.print_player_hand();
+			self.print_dealer_hand();
+
+			print_prompts();
+
+			let word: String = read!();
+
+			match word.as_str() {
+				"h" => self.player.hand.push(self.deck.draw().expect("Should not run out of cards")),
+				"s" => continue_play = false,
+				_ => println!("Unrecognized option")
+			}
+		}
+
+		if self.player.score() > 21 {
+			println!("Oh no, you busted!");
+		} else if (self.player.score() == 21 && self.player.hand.len() == 2) {
+			println!("Blackjack!");
+		}
+
 	}
 }
-
-
 
 impl Player<'_> {
 	fn score (&self) -> i32 {
@@ -78,4 +97,8 @@ impl Player<'_> {
 		}
 		score
 	}
+}
+
+fn print_prompts() {
+	println!("You may [h]it, or [s]tay")
 }
