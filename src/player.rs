@@ -1,5 +1,6 @@
 use crate::card::Card;
 
+#[derive(Clone)]
 pub struct Player<'a> {
     pub hand: Vec<Card>,
     pub name: &'a str,

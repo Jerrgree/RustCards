@@ -1,19 +1,32 @@
 use crate::games::game::Game;
 use crate::player::Player;
 use crate::card::Rank;
-use crate::card::{Card, Suit};
+use crate::deck::Deck;
 
 pub struct Blackjack<'a> {
 	player: Player<'a>,
 	dealer: Player<'a>,
+	deck: Deck,
 }
 
 impl Blackjack<'_> {
 	pub fn new() -> Blackjack<'static> {
 		Blackjack {
 			player: Player::new("Player"),
-			dealer: Player::new("Dealer")
+			dealer: Player::new("Dealer"),
+			deck: Deck::new(),
 		}
+	}
+
+	fn print_player_hand(&self) {
+		let message = &self.player.hand.iter()
+			.fold(String::from(""), |s, c| s + &c.to_string() + ", ");
+		println!("{}", message);
+	}
+
+	fn print_dealer_hand(&self) {
+		let firstCard = &self.dealer.hand[0];
+		println!("Dealer is showing: {firstCard}");
 	}
 }
 
@@ -21,29 +34,19 @@ impl Game for Blackjack<'_> {
 	fn play(&mut self) {
 		println!("Blackjack! {} vs {}", self.player.name, self.dealer.name);
 
-		self.player.hand.push(Card {
-			rank: Rank::Ten,
-			suit: Suit::Hearts
-		});
+		self.deck.shuffle();
 
-		self.player.hand.push(Card {
-			rank: Rank::Ace,
-			suit: Suit::Hearts
-		});
+		self.player.hand.push(self.deck.draw().expect("Initial deal should not be empty"));
+		self.dealer.hand.push(self.deck.draw().expect("Initial deal should not be empty"));
+		self.player.hand.push(self.deck.draw().expect("Initial deal should not be empty"));
+		self.dealer.hand.push(self.deck.draw().expect("Initial deal should not be empty"));
 
-		self.player.hand.push(Card {
-			rank: Rank::Five,
-			suit: Suit::Hearts
-		});
-
-		self.player.hand.push(Card {
-			rank: Rank::Five,
-			suit: Suit::Hearts
-		});
-
-		println!("{}", self.player.score());
+		self.print_player_hand();
+		self.print_dealer_hand();
 	}
 }
+
+
 
 impl Player<'_> {
 	fn score (&self) -> i32 {
@@ -73,8 +76,6 @@ impl Player<'_> {
 				score += 1;
 			}
 		}
-
 		score
 	}
 }
-

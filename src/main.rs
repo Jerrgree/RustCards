@@ -10,11 +10,4 @@ use games::blackjack::Blackjack;
 fn main() {
     let game = &mut Blackjack::new();
     game.play();
-
-    let mut deck = Deck::new();
-    deck.shuffle();
-
-    while let Some(card) = deck.draw() {
-        println!("{card}");
-    }
 }
