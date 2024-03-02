@@ -1,12 +1,12 @@
 use crate::card::Card;
 
-pub struct Player {
+pub struct Player<'a> {
     pub hand: Vec<Card>,
-    pub name: String,
+    pub name: &'a str,
 }
 
-impl Player {
-	pub fn new(name: String) -> Player {
+impl Player<'_> {
+	pub fn new(name: &str) -> Player {
 		Player {
 			name: name,
 			hand: Vec::<Card>::with_capacity(10),
