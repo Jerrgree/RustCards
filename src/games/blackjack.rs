@@ -56,8 +56,21 @@ impl Game for Blackjack<'_> {
 			println!("Oh no, you busted!");
 		} else if self.player.score() == 21 && self.player.hand.len() == 2 {
 			println!("Blackjack!");
-		}
+		} else {
+			while (self.dealer.score() < 16) {
+				let card = self.deck.draw().expect("Should not run out of cards");
+				println!("Dealer drew a {card}"); 
+				self.dealer.hand.push(card);
+			}
 
+			if self.dealer.score() > 21 {
+				println!("Dealer busted!")
+			} else if self.dealer.score() > self.player.score() {
+				println!("Dealer wins, {} to {}", self.dealer.score(), self.player.score());
+			} else {
+				println!("Player wins, {} to {}", self.player.score(), self.dealer.score());
+			}
+		}
 	}
 }
 
