@@ -46,7 +46,11 @@ impl Game for Blackjack<'_> {
 			let word: String = read!();
 
 			match word.as_str() {
-				"h" => self.player.hand.push(self.deck.draw().expect("Should not run out of cards")),
+				"h" => {
+					let card =  self.deck.draw().expect("Should not run out of cards");
+					println!("{} drew a {card}", self.player.name); 
+					self.player.hand.push(card);
+				},
 				"s" => continue_play = false,
 				_ => println!("Unrecognized option")
 			}
@@ -57,7 +61,7 @@ impl Game for Blackjack<'_> {
 		} else if self.player.score() == 21 && self.player.hand.len() == 2 {
 			println!("Blackjack!");
 		} else {
-			while (self.dealer.score() < 16) {
+			while self.dealer.score() < 16 {
 				let card = self.deck.draw().expect("Should not run out of cards");
 				println!("Dealer drew a {card}"); 
 				self.dealer.hand.push(card);
