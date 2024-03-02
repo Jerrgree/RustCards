@@ -1,7 +1,7 @@
+use crate::deck::Deck;
 use crate::games::game::Game;
 use crate::player::Player;
 use crate::card::Rank;
-use crate::deck::Deck;
 use text_io::read;
 
 pub struct Blackjack<'a> {
@@ -99,6 +99,6 @@ fn print_prompts() {
 
 fn print_player_hand(player: &Player) {
 	let message = player.hand.iter()
-		.fold(String::from(""), |s, c| s + &c.to_string() + ", ");
+		.fold(format!("{} has: ", player.name), |s, c| s + &c.to_string() + ", ");
 	println!("{}", message);
 }
