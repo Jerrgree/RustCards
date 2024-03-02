@@ -1,3 +1,3 @@
 pub trait Game {
-	fn play(&self);
+	fn play(&mut self);
 }

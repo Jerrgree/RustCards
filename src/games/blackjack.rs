@@ -1,6 +1,7 @@
 use crate::games::game::Game;
 use crate::player::Player;
 use crate::card::Rank;
+use crate::card::{Card, Suit};
 
 pub struct Blackjack<'a> {
 	player: Player<'a>,
@@ -17,26 +18,60 @@ impl Blackjack<'_> {
 }
 
 impl Game for Blackjack<'_> {
-	fn play(&self) {
-		println!("Blackjack! {} vs {}", self.player.name, self.dealer.name)
+	fn play(&mut self) {
+		println!("Blackjack! {} vs {}", self.player.name, self.dealer.name);
+
+		self.player.hand.push(Card {
+			rank: Rank::Ten,
+			suit: Suit::Hearts
+		});
+
+		self.player.hand.push(Card {
+			rank: Rank::Ace,
+			suit: Suit::Hearts
+		});
+
+		self.player.hand.push(Card {
+			rank: Rank::Five,
+			suit: Suit::Hearts
+		});
+
+		self.player.hand.push(Card {
+			rank: Rank::Five,
+			suit: Suit::Hearts
+		});
+
+		println!("{}", self.player.score());
 	}
 }
 
 impl Player<'_> {
 	fn score (&self) -> i32 {
 		let mut score = 0;
-		// Score the non-aces first, and then talley up the aces
-		// Would technically be faster to do one loop, count the number of aces, and then score off of those later
-		// But I wanted to play with closures and filters some
-		// Also need to figure out if clone is really the best way to interate through a vector
-		let non_aces = &self.hand.clone().into_iter().filter(|c| match c.rank { Rank::Ace => false, _ => true }).collect::<Vec<_>>();
-		for card in non_aces {
-			score += 1;
+		let mut aces = 0;
+
+		for card in &self.hand {
+			match card.rank {
+				Rank::Two => score += 2,
+				Rank::Three => score += 3,
+				Rank::Four => score += 4,
+				Rank::Five => score += 5,
+				Rank::Six => score += 6,
+				Rank::Seven => score += 7,
+				Rank::Eight => score += 8,
+				Rank::Nine => score += 9,
+				Rank::Ten | Rank::Jack | Rank::Queen | Rank::King => score += 10,
+				Rank::Ace => aces += 1
+			}
 		}
 
-		let aces = &self.hand.clone().into_iter().filter(|c| match c.rank { Rank::Ace => true, _ => false }).collect::<Vec<_>>();
-		for card in aces {
-			score += 1;
+		for _ in 0..aces {
+			if score < 11 {
+				score += 11;
+			}
+			else {
+				score += 1;
+			}
 		}
 
 		score
