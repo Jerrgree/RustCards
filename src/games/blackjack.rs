@@ -117,5 +117,5 @@ fn print_prompts() {
 fn print_player_hand(player: &Player) {
 	let message = player.hand.iter()
 		.fold(format!("{} has: ", player.name), |s, c| s + &c.to_string() + ", ");
-	println!("{}", message);
+	println!("{}", &message[..message.len() - 2]);
 }
