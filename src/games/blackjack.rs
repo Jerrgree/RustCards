@@ -19,12 +19,6 @@ impl Blackjack<'_> {
 		}
 	}
 
-	fn print_player_hand(&self) {
-		let message = &self.player.hand.iter()
-			.fold(String::from(""), |s, c| s + &c.to_string() + ", ");
-		println!("{}", message);
-	}
-
 	fn print_dealer_hand(&self) {
 		let first_card = &self.dealer.hand[0];
 		println!("Dealer is showing: {first_card}");
@@ -44,7 +38,7 @@ impl Game for Blackjack<'_> {
 		self.dealer.hand.push(self.deck.draw().expect("Initial deal should not be empty"));
 
 		while self.player.score() < 22 && continue_play == true {
-			self.print_player_hand();
+			print_player_hand(&self.player);
 			self.print_dealer_hand();
 
 			print_prompts();
@@ -60,7 +54,7 @@ impl Game for Blackjack<'_> {
 
 		if self.player.score() > 21 {
 			println!("Oh no, you busted!");
-		} else if (self.player.score() == 21 && self.player.hand.len() == 2) {
+		} else if self.player.score() == 21 && self.player.hand.len() == 2 {
 			println!("Blackjack!");
 		}
 
@@ -101,4 +95,10 @@ impl Player<'_> {
 
 fn print_prompts() {
 	println!("You may [h]it, or [s]tay")
+}
+
+fn print_player_hand(player: &Player) {
+	let message = player.hand.iter()
+		.fold(String::from(""), |s, c| s + &c.to_string() + ", ");
+	println!("{}", message);
 }
