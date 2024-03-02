@@ -10,8 +10,6 @@ use games::blackjack::Blackjack;
 fn main() {
     let game: &dyn Game = &Blackjack::new();
     game.play();
-    //let game = Blackjack::new();
-
 
     let mut deck = Deck::new();
     deck.shuffle();

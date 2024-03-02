@@ -73,7 +73,7 @@ impl Rank {
     }
 }
 
-
+#[derive(Clone)]
 pub struct Card {
     pub suit: Suit,
     pub rank: Rank
