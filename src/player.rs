@@ -9,7 +9,7 @@ impl Player {
 	pub fn new(name: String) -> Player {
 		Player {
 			name: name,
-			hand: Vec::<Card>::with_capacity_in(10);
+			hand: Vec::<Card>::with_capacity(10),
 		}
 	}
 }
