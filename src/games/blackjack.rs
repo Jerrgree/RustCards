@@ -67,12 +67,17 @@ impl Game for Blackjack<'_> {
 				self.dealer.hand.push(card);
 			}
 
+			let player_score = self.player.score();
+			let dealer_score = self.dealer.score();
+
 			if self.dealer.score() > 21 {
 				println!("Dealer busted!")
-			} else if self.dealer.score() > self.player.score() {
-				println!("Dealer wins, {} to {}", self.dealer.score(), self.player.score());
+			} else if player_score == dealer_score {
+				println!("It's a tie, {player_score} to {dealer_score}");
+			} else if dealer_score > player_score {
+				println!("Dealer wins, {dealer_score} to {player_score}");
 			} else {
-				println!("Player wins, {} to {}", self.player.score(), self.dealer.score());
+				println!("Player wins, {player_score} to {dealer_score}");
 			}
 		}
 	}
